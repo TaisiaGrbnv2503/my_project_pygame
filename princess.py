@@ -137,13 +137,24 @@ start_screen()
 level_map = load_level("levelex.txt")
 player, max_x, max_y = generate_level(level_map)
 
+
+counter = 15
+
+timer_event = pygame.USEREVENT+1
+pygame.time.set_timer(timer_event, 1000)
+
 running = True
 while running:
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
-        elif event.type == pygame.KEYDOWN:
+        if event.type == timer_event:
+            counter -= 1
+            print(counter)
+            if counter == 0:
+                running = False
+        if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_UP:
                 move(player, "up")
             elif event.key == pygame.K_DOWN:
