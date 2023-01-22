@@ -2,6 +2,7 @@ import os
 import sys
 import pygame
 import random
+from module import Button
 
 pygame.init()
 
@@ -19,6 +20,12 @@ tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 stone_group = pygame.sprite.Group()
 monstr_group = pygame.sprite.Group()
+monstr_group2 = pygame.sprite.Group()
+
+pygame.mixer.music.load("sound/fon.mp3")
+volume = 0.2
+pygame.mixer.music.set_volume(volume)
+pygame.mixer.music.play(-1)
 
 
 def load_image(name, colorkey=None): # мне надо вместо none написать -1
@@ -66,21 +73,34 @@ def terminate():
 
 
 def start_screen():
-    intro_text = ["текст  строка 1", "",
-                  "текст строка 2",
-                  "текст строка 3",
-                  "текст строка 4"]
-
+    intro_text = ["Спаси принцессу", "",
+                  "Сюжет игры:",
+                  "Ты рыцарь. Тебе",
+                  "нужно спасти",
+                  "принцессу от дракона.",
+                  "Для этого тебе нужно",
+                  "собрать сонные зелье.", "",
+                  "Как играть:",
+                  "Для движение исполь-",
+                  "зуй стрелки на",
+                  "клавиатуре.",
+                  "Для вкл музыки",
+                  "используй кнопку M,",
+                  "а для выкл пробел"]
+    # F0FFFF
     fon = pygame.transform.scale(load_image('fonpr.png'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
-    font = pygame.font.Font(None, 30)
+    button = Button(213, 40, ('#A9A9A9'), ('#F0FFFF'))
+    button.draw(5, 500, 'Начать игру', screen)
+    font = pygame.font.Font(None, 25)
+    font1 = pygame.font.Font(None, 15)
     text_coord = 50
     for line in intro_text:
-        string_rendered = font.render(line, True, pygame.Color('white'))
+        string_rendered = font.render(line, True, pygame.Color('#98FB98'))
         intro_rect = string_rendered.get_rect()
-        text_coord += 10
+        text_coord += 7
         intro_rect.top = text_coord
-        intro_rect.x = 10
+        intro_rect.x = 8
         text_coord += intro_rect.height
         screen.blit(string_rendered, intro_rect)
 
@@ -88,7 +108,8 @@ def start_screen():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 terminate()
-            elif event.type == pygame.KEYDOWN or event.type == pygame.MOUSEBUTTONDOWN:
+            act = button.mouse_click(5, 500, 'Начать игру', screen)
+            if act == 1:
                 return
         pygame.display.flip()
         clock.tick(FPS)
@@ -99,6 +120,7 @@ player_image = load_image('prin.png')
 stone_image = load_image('slepp1.png')
 tile_width = tile_height = 50
 monstr_image = load_image('dr.png')
+monstr_image2 = load_image('dr2.png')
 
 
 class Tile(pygame.sprite.Sprite):
@@ -147,6 +169,25 @@ class Koshei(pygame.sprite.Sprite):
             self.pos_x, self.pos_y)
 
 
+class Koshei2(pygame.sprite.Sprite):
+    def __init__(self, pos_x, pos_y):
+        super().__init__(monstr_group2, all_sprites)
+        self.image = monstr_image2
+        self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
+        self.pos_x = tile_width * pos_x
+        self.pos_y = tile_height * pos_y
+        self.x_start = self.pos_x
+        self.x_stop = self.x_start + 100
+        self.step = 1
+
+    def update(self):
+        if self.pos_x > self.x_stop or self.pos_x < self.x_start:
+            self.step = -self.step
+        self.pos_x += self.step
+        self.rect = self.image.get_rect().move(
+            self.pos_x, self.pos_y)
+
+
 def move(hero, movement, level_map, max_x, max_y):
 
     x, y = hero.pos
@@ -177,7 +218,7 @@ def bad_end():
 
 def good_end():
     img = load_image('fon1.png')
-    screen.blit(img, (850, 550))
+    screen.blit(img, (0, 0))
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -370,15 +411,16 @@ def level_3():
 
     m = Koshei(4, 7)
     monstr_group.add(m)
-    m2 = Koshei(5, 2)
+    m2 = Koshei(8, 2)
     monstr_group.add(m2)
-    m3 = Koshei(8, 2)
+    m3 = Koshei2(7, 6)
     monstr_group.add(m3)
-    m4 = Koshei(2, 3)
+    m4 = Koshei2(2, 4)
     monstr_group.add(m4)
 
 
     running = True
+    sound = True
     font_1 = pygame.font.Font(None, 50)
     font_2 = pygame.font.Font(None, 50)
     font_3 = pygame.font.Font(None, 19)
@@ -398,6 +440,14 @@ def level_3():
                 print(timer)
 
             if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    paused = not paused
+                if event.key == pygame.K_m:
+                    sound = not sound
+                    if sound:
+                        pygame.mixer.music.pause()
+                    else:
+                        pygame.mixer.music.unpause()
                 if event.key == pygame.K_UP:
                     move(player, "up", level_map, max_x, max_y)
                 elif event.key == pygame.K_DOWN:
@@ -433,9 +483,15 @@ def level_3():
         conflict3 = pygame.sprite.spritecollide(m2, player_group, True)
         if conflict3:
             bad_end()
+        conflict4 = pygame.sprite.spritecollide(m3, player_group, True)
+        if conflict4:
+            bad_end()
+        conflict5 = pygame.sprite.spritecollide(m4, player_group, True)
+        if conflict5:
+            bad_end()
         if timer == 0 and count_stone != 15:
             bad_end()
-        if timer <= 0 and count_stone == 15:
+        if timer >= 0 and count_stone == 15:
             good_end()
         pygame.display.flip()
 
