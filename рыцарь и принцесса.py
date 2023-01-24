@@ -15,12 +15,11 @@ screen = pygame.display.set_mode((WIDTH, HEIGHT))
 clock = pygame.time.Clock()
 
 player = None
-all_sprites = pygame.sprite.Group()
 tiles_group = pygame.sprite.Group()
 player_group = pygame.sprite.Group()
 stone_group = pygame.sprite.Group()
 monstr_group = pygame.sprite.Group()
-monstr_group2 = pygame.sprite.Group()
+
 
 pygame.mixer.music.load("sound/fon.mp3")
 volume = 0.2
@@ -83,10 +82,7 @@ def start_screen():
                   "Как играть:",
                   "Для движение исполь-",
                   "зуй стрелки на",
-                  "клавиатуре.",
-                  "Для вкл музыки",
-                  "используй кнопку M,",
-                  "а для выкл пробел"]
+                  "клавиатуре."]
     # F0FFFF
     fon = pygame.transform.scale(load_image('fonpr.png'), (WIDTH, HEIGHT))
     screen.blit(fon, (0, 0))
@@ -125,14 +121,14 @@ monstr_image2 = load_image('dr2.png')
 
 class Tile(pygame.sprite.Sprite):
     def __init__(self, tile_type, pos_x, pos_y):
-        super().__init__(tiles_group, all_sprites)
+        super().__init__(tiles_group)
         self.image = tile_images[tile_type]
         self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
 
 
 class Player(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
-        super().__init__(player_group, all_sprites)
+        super().__init__(player_group)
         self.image = player_image
         self.rect = self.image.get_rect().move(tile_width * pos_x + 15, tile_height * pos_y + 5)
         self.pos = (pos_x, pos_y)
@@ -145,14 +141,14 @@ class Player(pygame.sprite.Sprite):
 
 class Stone(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
-        super().__init__(stone_group, all_sprites)
+        super().__init__(stone_group)
         self.image = stone_image
         self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
 
 
 class Koshei(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
-        super().__init__(monstr_group, all_sprites)
+        super().__init__(monstr_group)
         self.image = monstr_image
         self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
         self.pos_x = tile_width * pos_x
@@ -171,7 +167,7 @@ class Koshei(pygame.sprite.Sprite):
 
 class Koshei2(pygame.sprite.Sprite):
     def __init__(self, pos_x, pos_y):
-        super().__init__(monstr_group2, all_sprites)
+        super().__init__(monstr_group)
         self.image = monstr_image2
         self.rect = self.image.get_rect().move(tile_width * pos_x, tile_height * pos_y)
         self.pos_x = tile_width * pos_x
@@ -241,8 +237,7 @@ def level_1():
             li1.append((x, y))
     print(li1)
     for el in li1:
-        izum = Stone(el[0], el[1])
-        #stone_group.add(izum)
+        Stone(el[0], el[1])
 
     running = True
     font_1 = pygame.font.Font(None, 50)
@@ -300,7 +295,6 @@ def level_1():
             player_group.empty()
             stone_group.empty()
             monstr_group.empty()
-            all_sprites.empty()
             level_2() # переход на второй уровень
         pygame.display.flip()
 
@@ -321,13 +315,10 @@ def level_2():
             li1.append((x, y))
     print(li1)
     for el in li1:
-        izum = Stone(el[0], el[1])
-        stone_group.add(izum)
+        Stone(el[0], el[1])
 
     m = Koshei(4, 7)
-    monstr_group.add(m)
     m2 = Koshei(5, 2)
-    monstr_group.add(m2)
 
     running = True
     font_1 = pygame.font.Font(None, 50)
@@ -378,6 +369,12 @@ def level_2():
         text_count = font_2.render(f'Сонное Зелье: {str(count_stone)}', True, (255, 255, 255))
         screen.blit(text_count, (550, 300))
         monstr_group.update()
+        conflict2 = pygame.sprite.spritecollide(m, player_group, True)
+        if conflict2:
+            bad_end()
+        conflict3 = pygame.sprite.spritecollide(m, player_group, True)
+        if conflict3:
+            bad_end()
         if timer == 0:
             bad_end()
         if count_stone == 10:
@@ -385,7 +382,6 @@ def level_2():
             player_group.empty()
             stone_group.empty()
             monstr_group.empty()
-            all_sprites.empty()
             level_3()  # переход на второй уровень
         pygame.display.flip()
 
@@ -406,8 +402,7 @@ def level_3():
             li1.append((x, y))
     print(li1)
     for el in li1:
-        izum = Stone(el[0], el[1])
-        stone_group.add(izum)
+        Stone(el[0], el[1])
 
     m = Koshei(4, 7)
     monstr_group.add(m)
@@ -440,14 +435,6 @@ def level_3():
                 print(timer)
 
             if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_SPACE:
-                    paused = not paused
-                if event.key == pygame.K_m:
-                    sound = not sound
-                    if sound:
-                        pygame.mixer.music.pause()
-                    else:
-                        pygame.mixer.music.unpause()
                 if event.key == pygame.K_UP:
                     move(player, "up", level_map, max_x, max_y)
                 elif event.key == pygame.K_DOWN:
