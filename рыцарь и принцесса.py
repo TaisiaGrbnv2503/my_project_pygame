@@ -372,7 +372,7 @@ def level_2():
         conflict2 = pygame.sprite.spritecollide(m, player_group, True)
         if conflict2:
             bad_end()
-        conflict3 = pygame.sprite.spritecollide(m, player_group, True)
+        conflict3 = pygame.sprite.spritecollide(m2, player_group, True)
         if conflict3:
             bad_end()
         if timer == 0:
