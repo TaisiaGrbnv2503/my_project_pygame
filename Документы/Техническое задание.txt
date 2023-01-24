@@ -1,0 +1,63 @@
+Техническое задание (ТЗ).
+Создать игру с помощью PyGame "Спаси принцессу"
+1.Персонажи:
+а) Рыцарь - главный герой
+б) Дракон вертикального вида
+в) Дракон горизонтального вида
+2. Сюжет игры заключается в собирании специальных сонных зелье. 
+Которые помогут усыпить дракона и спасти принцессу.
+3. Прототипом игры является задание "Перемещение героя" в классной работе Яндекс Лицея.
+4. В игре присутствует модуль (Button).
+5. Используемая музыка для фона:
+https://zvukipro.com/music/797-fonovaja-muzyka-srednevekovja-bez-slov.html
+6. Используемые библиотеки:
+altgraph==0.17.3
+auto-py-to-exe==2.27.0 
+bottle==0.12.23        
+bottle-websocket==0.2.9
+cffi==1.15.1           
+Eel==0.14.0            
+future==0.18.3         
+gevent==22.10.2        
+gevent-websocket==0.10.1
+greenlet==2.0.1
+pefile==2022.5.30
+pycparser==2.21
+pygame==2.1.2
+pyinstaller==5.7.0
+pyinstaller-hooks-contrib==2022.15
+pyparsing==3.0.9
+PyQt5==5.15.7
+PyQt5-Qt5==5.15.2
+PyQt5-sip==12.11.0
+pywin32-ctypes==0.2.0
+whichcraft==0.6.1
+zope.event==4.6
+zope.interface==5.5.2
+7. Используемые картинки:
+https://img1.freepng.ru/20180810/klf/kisspng-knight-pixel-art-cartoon-pixilart-knightpixelart-by-anonymous-5b6dc04c7f1367.6052371015339193085205.jpg
+https://w7.pngwing.com/pngs/36/847/png-transparent-dragon-monster-fantasy-legendary-creature-rider-legendary-creature-blue-dragon.png
+https://png.pngtree.com/png-clipart/20191011/ourmid/pngtree-illustration-blue-potion-png-image_1810821.jpg
+https://abrakadabra.fun/uploads/posts/2021-11/thumbs/1636655207_27-abrakadabra-fun-p-oboi-geim-over-33.jpg
+https://oir.mobi/uploads/posts/2019-12/1576026094_1-2.png
+https://i.pinimg.com/564x/2c/63/80/2c638046c64c080fc2badaab04628189.jpg
+https://tn.fishki.net/26/upload/post/2017/10/08/2399958/0-121750-b95810b9-orig.jpg
+https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRefN_E_gzebFiB_bZ9eS5o9jbbt4J9hBF2OfDroHiHTOVsw1TEBlsUde2sFwW4-SRrnmw&usqp=CAU
+https://phonoteka.org/uploads/posts/2021-06/1623387784_15-phonoteka_org-p-teks
+8.Файлы для уровней:
+levelex.txt
+levelex2.txt
+levelex3.txt
+9. Запуск:
+рыцарь и принцесса.py
+10. Структура:
+Начальная страница
+|
+Первый уровень
+|\
+Второй уровень Конец игры (проигрыш)
+|\
+Третий уровень Конец игры (проигрыш)
+|\
+Проигрыш Хороший конец игры
+
